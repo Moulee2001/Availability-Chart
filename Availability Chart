@@ -1,0 +1,396 @@
+<%{
+	HeaderValues = thisapp.AvailabilityChart.HeaderforSnippet(input.recid.tolong());
+	%>
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px; /* Base font size for readability */
+    background-color: #f0f4f8; /* Light gray background for the page */
+    color: #333; /* Darker text color for readability */
+    margin: 0;
+    padding: 0;
+}
+
+.table-container {
+    width: 100%;
+    max-width: 1200px; /* Maximum width for large tables */
+    border-collapse: collapse;
+    font-size: 16px; /* Font size for table content */
+    text-align: center;
+    background-color: #ffffff; /* White background for the table */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Ensure rounded corners */
+}
+
+.table-header {
+    background-color: #8b6608; /* Primary blue color for the header */
+    color: #ffffff; /* White text color */
+}
+
+.table-header th {
+    padding: 14px; /* Increased padding for header cells */
+}
+
+.table-container th, .table-container td {
+    border: 1px solid #e0e0e0; /* Light gray border for cells */
+    padding: 12px; /* Padding for cells */
+    text-align: center;
+    vertical-align: middle; /* Center content vertically */
+}
+
+.table-container td {
+    background-color: #ffffff; /* White background for table cells */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.table-container tr:nth-child(even) {
+    background-color: #f4f4f4; /* Light gray for even rows */
+}
+
+.table-container tr:hover td {
+    background-color:#ebdba8; /* Very light blue on hover */
+}
+
+.available {
+    color: #27ae60; /* Green for available */
+    font-weight: bold;
+}
+.CWH
+{
+	color: #00b0f0; /* Green for available */
+    font-weight: bold;
+}
+.second-option {
+    color: #e67e22; /* Orange for second option */
+    font-weight: bold;
+}
+
+.tbc {
+    color: #f39c12; /* Yellow-orange for TBC */
+    font-weight: bold;
+}
+
+.not-available {
+    color: #c0392b; /* Dark red for not available */
+    font-weight: bold;
+}
+
+.capacity {
+    color: #8e44ad; /* Deep purple for capacity */
+    font-weight: bold;
+    display: block;
+    margin-top: 5px; /* Space above capacity text */
+}
+
+.table-footer {
+    background-color: #ecf0f1; /* Very light gray for footer */
+    font-size: 18px; /* Larger font size for footer */
+    font-weight: bold; /* Bold text for footer */
+    padding: 15px;
+    border-top: 1px solid #ddd; /* Light border on top */
+}
+.VHCPCharge{
+	color:red;
+}
+.scs
+{
+	color: #000000; 
+	font-weight: bold;
+}
+.cps
+{
+	color: #000000; 
+	font-weight: bold;
+}
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .table-container {
+        font-size: 14px; /* Slightly smaller font size for medium screens */
+    }
+
+    .table-header th, .table-container th, .table-container td {
+        padding: 10px; /* Reduce padding for medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .table-container {
+        font-size: 12px; /* Smaller font size for small screens */
+        overflow-x: hidden; /* Enable horizontal scrolling */
+    }
+
+    .table-header th, .table-container th, .table-container td {
+        padding: 8px; /* Further reduce padding */
+    }
+
+    .table-container th, .table-container td {
+        display: block; /* Stack table cells vertically */
+        text-align: left; /* Align text to the left for readability */
+    }
+
+    .table-container thead {
+        display: none; /* Hide table headers on small screens */
+    }
+
+    .table-container tr {
+        margin-bottom: 10px; /* Space between rows */
+        border-bottom: 1px solid #ddd; /* Border between rows */
+    }
+
+    .table-container td {
+        position: relative; /* Position for pseudo-elements */
+        padding-left: 50%; /* Space for labels */
+    }
+
+    .table-container td::before {
+        content: attr(data-label); /* Use data-label for column names */
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 50%;
+        padding: 8px;
+        font-weight: bold;
+        background-color: #f9f9f9;
+        border-right: 1px solid #ddd;
+        white-space: nowrap; /* Prevent text wrapping */
+    }
+}
+
+/* Print Styling */
+@media print {
+	    @page {
+			size: A4;
+        size: landscape; /* Set page orientation to landscape */
+    }
+    body {
+        background-color: #ffffff; /* White background for printing */
+        color: #000000; /* Black text color for printing */
+    }
+    .table-container {
+        width: 100%;
+        border-collapse: collapse;
+        box-shadow: none; /* Remove shadow for printing */
+        border-radius: 0; /* Remove rounded corners */
+    }
+
+    .table-header {
+        background-color: #8b6608; /* Retain header background color for print */
+        color: #ffffff; /* White text color for print */
+    }
+
+    .table-container th, .table-container td {
+        border: 1px solid #000000; /* Solid black border for print */
+        padding: 10px; /* Consistent padding */
+    }
+
+    .table-container tr:nth-child(even) {
+        background-color: #f9f9f9; /* Light gray for alternating rows */
+    }
+
+    .table-container tr:hover td {
+        background-color: transparent; /* No hover effect for print */
+    }
+
+.capacity {
+    color: #8e44ad; /* Deep purple for capacity */
+    font-weight: bold;
+    display: block;
+    margin-top: 5px; /* Space above capacity text */
+}
+
+    .table-footer {
+        background-color: #ffffff; /* White background for footer in print */
+        border-top: 1px solid #000000; /* Solid black border for footer */
+    }
+
+    /* Hide unnecessary elements for print */
+    @media print {
+        .no-print {
+            display: none; /* Class for elements that should not be printed */
+        }
+    }
+}
+</style>
+
+
+
+
+<body>
+    <table class="table-container">
+        <thead class="table-header">
+            <tr>
+<%
+	for each  datelist in HeaderValues
+	{
+		%>
+<th><%=datelist%></th>
+<%
+	}
+	%>
+</tr>
+        </thead>
+        <tbody>
+<%
+	AvailabilityResponse = Availability_chart[ID == input.recid.tolong()];
+	VenueList = List();
+	for each  venueadd in AvailabilityResponse.Venue
+	{
+		VenueList.add(venueadd);
+	}
+	SuiteList = List();
+	if(AvailabilityResponse.Suite == null)
+	{
+		for each  venueid in VenueList
+		{
+			if(AvailabilityResponse.Number_of_Guests != null)
+			{
+				SuiteResponse = Suite[Venue.ID == venueid && Min_capacity <= AvailabilityResponse.Number_of_Guests && Max_capacity >= AvailabilityResponse.Number_of_Guests].ID.getAll();
+			}
+			else
+			{
+				SuiteResponse = Suite[Venue.ID == venueid].ID.getAll();
+			}
+			for each  suiteadd in SuiteResponse
+			{
+				SuiteList.add(suiteadd);
+			}
+		}
+	}
+	else if(AvailabilityResponse.Suite != null)
+	{
+		for each  suiterecid in AvailabilityResponse.Suite
+		{
+			SuiteList.add(suiterecid);
+		}
+	}
+	for each  suitecheck in SuiteList
+	{
+		suite_name = Suite[ID == suitecheck];
+		bookingDatesBetween = thisapp.AvailabilityChart.BookingDatesbewteenTableBody(AvailabilityResponse.ID);
+		venuepricinfgResponse = thisapp.AvailabilityChart.securityCharge(AvailabilityResponse.ID,suite_name.ID);
+		car_parking = Venue_Info[Venue.ID == suite_name.Venue];
+		if(AvailabilityResponse.Start_Date != null && AvailabilityResponse.End_Date != null)
+		{
+			bookingresponse1 = Booking[Venue.ID == suite_name.Venue && Suite.ID == suite_name.ID && Date_of_Booking >= AvailabilityResponse.Start_Date && Date_of_Booking <= AvailabilityResponse.End_Date && Booking_Status.Status == "Available For Show Around"];
+		}
+		else if(AvailabilityResponse.Start_Date == null && AvailabilityResponse.End_Date == null)
+		{
+			bookingresponse1 = Booking[Venue.ID == suite_name.Venue && Suite.ID == suite_name.ID && Booking_Status.Status == "Available For Show Around"];
+		}
+		else if(AvailabilityResponse.Start_Date != null && AvailabilityResponse.End_Date == null)
+		{
+			bookingresponse1 = Booking[Venue.ID == suite_name.Venue && Suite.ID == suite_name.ID && Date_of_Booking == AvailabilityResponse.Start_Date && Booking_Status.Status == "Available For Show Around"];
+		}
+		else if(AvailabilityResponse.Start_Date == null && AvailabilityResponse.End_Date != null)
+		{
+			bookingresponse1 = Booking[Venue.ID == suite_name.Venue && Suite.ID == suite_name.ID && Date_of_Booking == AvailabilityResponse.End_Date && Booking_Status.Status == "Available For Show Around"];
+		}
+		%>
+<tr>
+                <td style="text-align:left;font-weight:bolder;"><%=suite_name.Venue.Venue_Name%><br><%=suite_name.Suite_Name%><br><span class="capacity">Max Capacity: <%=suite_name.Max_capacity%></span></td>
+<%
+		venuepricinfgVenueChanrges = thisapp.AvailabilityChart.AverageVenuePricing(AvailabilityResponse.ID,suite_name.ID,ifnull(AvailabilityResponse.Number_of_Guests,0));
+		for each  datecheck in venuepricinfgVenueChanrges
+		{
+			DateValues = datecheck.getJson("Dates");
+			VHSCharges = datecheck.getJson("VenueHireCharge");
+			formatted_VHSCharges = "";
+			if(VHSCharges != null)
+			{
+				formatted_VHSCharges = "£ " + VHSCharges + " + vat";
+			}
+			else
+			{
+				formatted_VHSCharges = "            ";
+			}
+			bookingresponse = Booking[Venue.ID == suite_name.Venue && Suite.ID == suite_name.ID && Date_of_Booking == DateValues];
+			if(bookingresponse.ID == null)
+			{
+				%>
+<td class="CWH">Check with Hotel<br><p class="VHCPCharge"><%=formatted_VHSCharges%></p></td>
+<%
+			}
+			else if(bookingresponse.Booking_Status.Status == "Madhus Provisional" || bookingresponse.Booking_Status.Status == "Ragaasan Provisional")
+			{
+				%>
+<td class="available">Available<br><p class="VHCPCharge"><%=formatted_VHSCharges%></p></td>
+<%
+			}
+			else if(bookingresponse.Booking_Status.Status == " Provisional")
+			{
+				%>
+<td class="second-option">2nd Option<br><p class="VHCPCharge"><%=formatted_VHSCharges%></p></td>
+<%
+			}
+			else if(bookingresponse.Booking_Status.Status == "2nd Option")
+			{
+				%>
+<td class="second-option">3rd Option<br><p class="VHCPCharge"><%=formatted_VHSCharges%></p></td>
+<%
+			}
+			else if(bookingresponse.Booking_Status.Status == "Confirmed")
+			{
+				%>
+<td class="tbc">Madhu’s event<br><p class="VHCPCharge"><%=formatted_VHSCharges%></p></td>
+<%
+			}
+			else
+			{
+				%>
+<td class="not-available">Not Available<br><p class="VHCPCharge"><%=formatted_VHSCharges%></p></td>
+<%
+			}
+		}
+		%>
+<td class="scs"><%=ifnull(venuepricinfgResponse,"-")%></td>
+<%
+		if(car_parking.Car_Parking == "Yes")
+		{
+			%>
+<td class="cps"><%=ifnull(car_parking.Number_of_parking_spaces,0)%></td>
+<%
+		}
+		else
+		{
+			%>
+<td>-</td>
+<%
+		}
+		if(bookingresponse1.ID != null)
+		{
+			newavailvaildateList = List();
+			for each  newdate in bookingresponse1
+			{
+				newavailvaildateList.add(newdate.Date_of_Booking);
+			}
+			%>
+<td>
+<%
+			for each  dateval in newavailvaildateList
+			{
+				%>
+<p class="capacity"><%=dateval%></p>
+<%
+			}
+			%>
+</td>
+<%
+		}
+		else
+		{
+			%>
+<td></td>
+<%
+		}
+		%>
+</tr>
+<%
+	}
+	%>
+</tbody>
+    </table>
+</body>
+<%
+
+}%>
